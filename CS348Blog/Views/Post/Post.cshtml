@@ -1,0 +1,105 @@
+﻿@model CSC348Blog.Models.Post
+@using Microsoft.AspNetCore.Html
+
+@{
+    ViewData["Title"] = "Post";
+}
+
+<h2>Post</h2>
+
+<div>
+    <h4>Post</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="EditPost" asp-route-id="@Model.PostID">Edit</a> |
+    <a asp-action="postList">Back to List</a>
+</div>
+<div class="comment-section">
+    @{
+        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = 0 });
+    }
+    @foreach (var comment in Model.Comments)
+    {
+        @if (comment.ParentCommentID == 0)
+        {
+            <p>
+                @comment.Content --- @comment.Creator --- @comment.CreationTime
+            </p>
+            <div style="margin-left: 20px;">
+                <h4>Sub Comments</h4>
+                @{
+                    await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = comment.CommentID, ReplyTo = comment.Creator });
+                }
+                @*@{
+                    Func<CSC348Blog.Models.Comment, HelperResult> showComment = (comment) => new Func<>(@<text>
+                @foreach (var sc in Model.Comments)
+                {
+                    @if (sc.ParentCommentID == comment.CommentID)
+                    {
+                        <p>
+                            @sc.Content --- @sc.Creator --- @sc.CreationTime
+                        </p>
+                        @{ 
+                            await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = sc.CommentID, ReplyTo = sc.Creator });
+                        }
+                                @{ 
+                                    await @showComment(sc);
+                                }
+                    }
+                }
+                );               
+        }*@
+            @{await ShowComment(comment);}
+    @Html.Raw(Display())
+            </div>
+                    }
+    }
+</div>
+@functions{
+    List<string> str = new List<string>();
+    public async Task ShowComment(CSC348Blog.Models.Comment comment)
+    {
+        string s;
+        foreach (var sc in Model.Comments)
+        {
+            if (sc.ParentCommentID == comment.CommentID)
+            {
+                s = "<p>" + sc.Content + " --- " + sc.Creator + " --- " + sc.CreationTime + "</p>"
+                    + "@{await Html.RenderPartialAsync(\"_MainComment\", new CSC348Blog.Models.CommentViewModel { PostID = " + Model.PostID + ", MainCommentID = " + sc.CommentID + ", ReplyTo = " + sc.Creator + " });}";
+                str.Add(s);
+                //Comment(sc.Content, sc.Creator, sc.CreationTime);
+                //"<div style=\"margin-left: 20px;\">";
+
+                //await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = sc.CommentID, ReplyTo = sc.Creator });
+                await ShowComment(sc);
+            }
+        }
+        return;
+    }
+
+    public string Display()
+    {
+        string s = "";
+        for (int i = 0; i < str.Count; i++)
+        {
+            s += str[i];
+        }
+        return s;
+    }
+}
+

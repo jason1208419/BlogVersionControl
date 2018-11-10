@@ -1,0 +1,42 @@
+﻿@model IEnumerable<CSC348Blog.Models.Post>
+
+@{
+    ViewData["Title"] = "PostList";
+}
+
+<h2>PostList</h2>
+
+<p>
+    <a asp-action="CreatePost">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <a asp-action="EditPost" asp-route-id="@item.PostID">Edit</a> |
+                    <a asp-action="Post" asp-route-id="@item.PostID">Details</a> |
+                    <a asp-action="DeletePost" asp-route-id="@item.PostID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

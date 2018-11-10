@@ -1,0 +1,15 @@
+﻿@model CSC348Blog.Models.CommentViewModel
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div>
+    <form method="post" asp-action="Comment">
+        <input asp-for="PostID" type="hidden" />
+        <input asp-for="MainCommentID" type="hidden" />
+        <input asp-for="Content" />
+        <input asp-for="ReplyTo" type="hidden" />
+        <button type="submit">Submit</button>
+    </form>
+</div>
