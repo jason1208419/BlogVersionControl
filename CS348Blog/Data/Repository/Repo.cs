@@ -47,10 +47,5 @@ namespace CSC348Blog.Data.Repository
         {
             db.Posts.Remove(post);
         }
-
-        public async Task AddSubComment(Comment comment)
-        {
-            await db.Comments.AddAsync(comment);
-        }
     }
 }

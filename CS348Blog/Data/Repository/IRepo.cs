@@ -14,6 +14,5 @@ namespace CSC348Blog.Data.Repository
         Task SaveChangesAsync();
         void UpdatePost(Post post);
         void RemovePost(Post post);
-        Task AddSubComment(Comment comment);
     }
 }
