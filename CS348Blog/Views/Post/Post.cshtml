@@ -31,7 +31,7 @@
 </div>
 <div class="comment-section">
     @{
-        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = 0 });
+        await ShowPartialView(0);
     }
     @foreach (var comment in Model.Comments)
     {
@@ -43,63 +43,31 @@
             <div style="margin-left: 20px;">
                 <h4>Sub Comments</h4>
                 @{
-                    await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = comment.CommentID, ReplyTo = comment.Creator });
+                    await ShowPartialView(comment.CommentID, comment.Creator);
                 }
-                @*@{
-                    Func<CSC348Blog.Models.Comment, HelperResult> showComment = (comment) => new Func<>(@<text>
-                @foreach (var sc in Model.Comments)
-                {
-                    @if (sc.ParentCommentID == comment.CommentID)
+                    @foreach (var sc in Model.Comments)
                     {
-                        <p>
-                            @sc.Content --- @sc.Creator --- @sc.CreationTime
-                        </p>
-                        @{ 
-                            await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = sc.CommentID, ReplyTo = sc.Creator });
+                        if (sc.ParentCommentID == comment.CommentID)
+                        {
+                            <p>
+                                @sc.Content --- @sc.Creator --- @sc.CreationTime
+                            </p>
+                            await ShowPartialView(comment.CommentID, sc.Creator);
                         }
-                                @{ 
-                                    await @showComment(sc);
-                                }
                     }
-                }
-                );               
-        }*@
-            @{await ShowComment(comment);}
-    @Html.Raw(Display())
             </div>
-                    }
+        }
     }
 </div>
 @functions{
-    List<string> str = new List<string>();
-    public async Task ShowComment(CSC348Blog.Models.Comment comment)
+    public async Task ShowPartialView(int id, string creator)
     {
-        string s;
-        foreach (var sc in Model.Comments)
-        {
-            if (sc.ParentCommentID == comment.CommentID)
-            {
-                s = "<p>" + sc.Content + " --- " + sc.Creator + " --- " + sc.CreationTime + "</p>"
-                    + "@{await Html.RenderPartialAsync(\"_MainComment\", new CSC348Blog.Models.CommentViewModel { PostID = " + Model.PostID + ", MainCommentID = " + sc.CommentID + ", ReplyTo = " + sc.Creator + " });}";
-                str.Add(s);
-                //Comment(sc.Content, sc.Creator, sc.CreationTime);
-                //"<div style=\"margin-left: 20px;\">";
-
-                //await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = sc.CommentID, ReplyTo = sc.Creator });
-                await ShowComment(sc);
-            }
-        }
-        return;
+        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = id, ReplyTo = creator });
     }
 
-    public string Display()
+    public async Task ShowPartialView(int id)
     {
-        string s = "";
-        for (int i = 0; i < str.Count; i++)
-        {
-            s += str[i];
-        }
-        return s;
+        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = id });
     }
 }
 
