@@ -13,6 +13,7 @@ using CS348Blog.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CSC348Blog.Data.Repository;
+using CSC348Blog.Data;
 
 namespace CS348Blog
 {
@@ -44,10 +45,15 @@ namespace CS348Blog
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<IRepo, Repo>();
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("AdminOnly"));
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -72,6 +78,8 @@ namespace CS348Blog
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            DbSeeder.SeedDb(userManager, roleManager);
         }
     }
 }
