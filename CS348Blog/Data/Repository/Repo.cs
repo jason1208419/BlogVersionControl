@@ -10,42 +10,42 @@ namespace CSC348Blog.Data.Repository
 {
     public class Repo : IRepo
     {
-        private ApplicationDbContext db;
+        private ApplicationDbContext _db;
 
-        public Repo (ApplicationDbContext _db)
+        public Repo (ApplicationDbContext db)
         {
-            db = _db;
+            _db = db;
         }
 
         public async Task<Post> GetPost (int? id)
         {
-            return await db.Posts.Include(p => p.Comments)
+            return await _db.Posts.Include(p => p.Comments)
                 .FirstOrDefaultAsync(p => p.PostID == id);
         }
 
         public async Task<List<Post>> GetPostList()
         {
-            return await db.Posts.ToListAsync();
+            return await _db.Posts.ToListAsync();
         }
 
         public async Task AddPost(Post post)
         {
-            await db.Posts.AddAsync(post);
+            await _db.Posts.AddAsync(post);
         }
 
         public async Task SaveChangesAsync()
         {
-            await db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
 
         public void UpdatePost(Post post)
         {
-            db.Posts.Update(post);
+            _db.Posts.Update(post);
         }
 
         public void RemovePost(Post post)
         {
-            db.Posts.Remove(post);
+            _db.Posts.Remove(post);
         }
     }
 }

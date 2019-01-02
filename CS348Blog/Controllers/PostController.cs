@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using CS348Blog.Data;
 using CSC348Blog.Data.Repository;
+using System.Security.Claims;
 
 /*
     This controller due with Get request and post request about posts
@@ -17,47 +18,53 @@ using CSC348Blog.Data.Repository;
  */
 namespace CSC348Blog.Controllers
 {
-    [Authorize/*(Policy = "AdminOnly")*/]
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class PostController : Controller
     {
-        private IRepo repo;
+        private IRepo _repo;
 
         //Initialize the database when construting the controller
-        public PostController(IRepo _repo)
+        public PostController(IRepo repo)
         {
-            repo = _repo;
+            _repo = repo;
             //var comment = new Comment();
         }
 
         //Get the requested post from database and display the details of the post
+        [Authorize("View Post")]
         public async Task<IActionResult> Post(int? id)
         {
             return await GetPost(id);
         }
 
         //Display the page of creating post
+        [Authorize("Create Post")]
         public IActionResult CreatePost()
         {
             return View();
         }
 
         //Get all posts from database and turn it to a list. Then display all posts in a page
+        [Authorize("View Post List")]
         public async Task<IActionResult> PostList()
         {
-            List<Post> postsList = await repo.GetPostList();
+            List<Post> postsList = await _repo.GetPostList();
             return View(postsList);
         }
 
         //Get the post from database which the user want to edit and display details on input area
+        //[Authorize("Edit Post")]
         public async Task<IActionResult> EditPost(int? id)
         {
-            return await GetPost(id);
+            return await Authorize(id, "edit");
         }
 
         //Get the post from database which the user want to delete and display details on the page
+        //[Authorize("Delete Post")]
         public async Task<IActionResult> DeletePost(int? id)
         {
-            return await GetPost(id);
+            return await Authorize(id, "delete");
         }
 
         /*
@@ -65,6 +72,7 @@ namespace CSC348Blog.Controllers
             Redirect to the page showing details of the created post after creation
          */
         [HttpPost]
+        [Authorize("Create Post")]
         public async Task<IActionResult> CreatePost(Post post)
         {
             post.Creator = User.Identity.Name;
@@ -73,8 +81,8 @@ namespace CSC348Blog.Controllers
             //Check if all required data is given
             if (ModelState.IsValid)
             {
-                await repo.AddPost(post);
-                await repo.SaveChangesAsync();
+                await _repo.AddPost(post);
+                await _repo.SaveChangesAsync();
 
                 return RedirectToAction("Post", "Post", new { id = post.PostID });
             }
@@ -87,6 +95,7 @@ namespace CSC348Blog.Controllers
             Redirect to the page showing details of the created post after editing
          */
         [HttpPost]
+        //[Authorize("Edit Post")]
         public async Task<IActionResult> EditPost(int id, Post post)
         {
             //Check if the user edit the post he meant to be editing
@@ -102,8 +111,8 @@ namespace CSC348Blog.Controllers
             if (ModelState.IsValid)
             {
 
-                repo.UpdatePost(post);
-                await repo.SaveChangesAsync();
+                _repo.UpdatePost(post);
+                await _repo.SaveChangesAsync();
 
                 return RedirectToAction("Post", "Post", new { id = post.PostID });
             }
@@ -115,12 +124,13 @@ namespace CSC348Blog.Controllers
             Redirect to the page showing list of posts after deletion
          */
         [HttpPost]
+        //[Authorize("Delete Post")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            Post post = await repo.GetPost(id);
+            Post post = await _repo.GetPost(id);
 
-            repo.RemovePost(post);
-            await repo.SaveChangesAsync();
+            _repo.RemovePost(post);
+            await _repo.SaveChangesAsync();
 
             return RedirectToAction("PostList");
         }
@@ -134,7 +144,7 @@ namespace CSC348Blog.Controllers
                 return NotFound();
             }
 
-            Post post = await repo.GetPost(id);
+            Post post = await _repo.GetPost(id);
 
             //Check if the post is found in the database base on the given post ID
             if (post == null)
@@ -145,7 +155,49 @@ namespace CSC348Blog.Controllers
             return View(post);
         }
 
+        private async Task<bool> IsPostOwner(int? id, string action)
+        {
+            if (id == null)
+            {
+                return false;
+            }
+
+            var post = await _repo.GetPost(id);
+
+            if (post == null)
+            {
+                return false;
+            }
+
+            if (action.Equals("edit", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (post.Creator.Equals(User.Identity.Name) || User.HasClaim("Edit Post", "allowed"))
+                {
+                    return true;
+                }
+            } else if (action.Equals("delete", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (post.Creator.Equals(User.Identity.Name) || User.HasClaim("Delete Post", "allowed"))
+                {
+                    return true;
+                }
+            }
+
+            
+            return false;
+        }
+
+        private async Task<IActionResult> Authorize(int? id, string action)
+        {
+            if (!await IsPostOwner(id, action))
+            {
+                return Redirect("/Identity/Account/AccessDenied");
+            }
+            return await GetPost(id);
+        }
+
         [HttpPost]
+        [Authorize("Create Comment")]
         public async Task<IActionResult> Comment(CommentViewModel fuck)
         {
             if (!ModelState.IsValid)
@@ -153,7 +205,7 @@ namespace CSC348Blog.Controllers
                 return RedirectToAction("Post", new { id = fuck.PostID });
             }
 
-            var post = await repo.GetPost(fuck.PostID);
+            var post = await _repo.GetPost(fuck.PostID);
             post.Comments = post.Comments ?? new List<Comment>();
             if (fuck.MainCommentID == 0)
             {
@@ -174,8 +226,8 @@ namespace CSC348Blog.Controllers
                     CreationTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
                 });
             }
-            repo.UpdatePost(post);
-            await repo.SaveChangesAsync();
+            _repo.UpdatePost(post);
+            await _repo.SaveChangesAsync();
 
             return RedirectToAction("Post", new { id = fuck.PostID });
         }

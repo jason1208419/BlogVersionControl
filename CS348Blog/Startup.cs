@@ -40,16 +40,81 @@ namespace CS348Blog
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //            services.AddIdentity<IdentityUser, IdentityRole>()
+            //.AddDefaultUI()
+            //.AddDefaultTokenProviders()
+            //.AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<IRepo, Repo>();
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("AdminOnly"));
-            //});
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Create Post", policy => policy.RequireClaim("Create Post", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Edit Post", policy => policy.RequireClaim("Edit Post", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Delete Post", policy => policy.RequireClaim("Delete Post", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("View Post", policy => policy.RequireClaim("View Post", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("View Post List", policy => policy.RequireClaim("View Post List", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Create Comment", policy => policy.RequireClaim("Create Comment", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Edit Comment", policy => policy.RequireClaim("Edit Comment", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Delete Comment", policy => policy.RequireClaim("Delete Comment", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("View Comment", policy => policy.RequireClaim("View Comment", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Like", policy => policy.RequireClaim("Like", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Dislike", policy => policy.RequireClaim("Dislike", "allowed"));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Permission Panel", policy => policy.RequireClaim("Permission Panel", "allowed"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +136,7 @@ namespace CS348Blog
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+            DbSeeder.SeedDb(userManager, roleManager);
 
             app.UseMvc(routes =>
             {
@@ -78,8 +144,6 @@ namespace CS348Blog
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            DbSeeder.SeedDb(userManager, roleManager);
         }
     }
 }
