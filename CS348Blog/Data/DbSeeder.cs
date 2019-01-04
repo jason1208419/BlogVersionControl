@@ -99,8 +99,6 @@ namespace CSC348Blog.Data
             AddRoleClaim(roleManager, "StandardUser", "View Post", "allowed").Wait();
             AddRoleClaim(roleManager, "StandardUser", "View Post List", "allowed").Wait();
             AddRoleClaim(roleManager, "StandardUser", "Create Comment", "allowed").Wait();
-            AddRoleClaim(roleManager, "StandardUser", "Edit Comment", "allowed").Wait();
-            AddRoleClaim(roleManager, "StandardUser", "Delete Comment", "allowed").Wait();
             AddRoleClaim(roleManager, "StandardUser", "View Comment", "allowed").Wait();
             AddRoleClaim(roleManager, "StandardUser", "Like", "allowed").Wait();
             AddRoleClaim(roleManager, "StandardUser", "Dislike", "allowed").Wait();

@@ -1,0 +1,134 @@
+﻿@model CSC348Blog.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "User";
+}
+
+<h2>User</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            ID
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            User Name
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt>
+            Email
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            Email Confirmed
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EmailConfirmed)
+        </dd>
+        <dt>
+            Phone Number
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt>
+            Phone Number Confirmed
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumberConfirmed)
+        </dd>
+        <dt>
+            Two Factor Enabled
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TwoFactorEnabled)
+        </dd>
+        <dt>
+            Lockout Enabled
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LockoutEnabled)
+        </dd>
+        <dt>
+            Access Failed Count
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AccessFailedCount)
+        </dd>
+    </dl>
+</div>
+<div>
+    <h4>User Permissions</h4>
+    <hr />
+    <h5>Roles</h5>
+    <dl class="dl-horizontal">
+        @{bool inRole = false; }
+        @foreach (var role in Model.AllRoles)
+        {
+            <dt>
+                @role.Name
+            </dt>
+            foreach (var userRole in Model.UserRoles)
+            {
+                if (role.Equals(userRole))
+                {
+                    inRole = true;
+                    <dd>
+                        @Html.DisplayFor(model => inRole)
+                    </dd>
+                    break;
+                }
+            }
+            if (!inRole)
+            {
+                <dd>
+                    @Html.DisplayFor(model => inRole)
+                </dd>
+            }
+            inRole = false;
+        }
+    </dl>
+</div>
+<div>
+    <h5>Claims</h5>
+    <dl class="dl-horizontal">
+        @{ bool inClaim = false;}
+        @foreach (var claim in Model.AllClaims)
+        {
+            <dt>
+                @claim.Type
+            </dt>
+            foreach (var userClaim in Model.UserClaims)
+            {
+                if (claim.Type.Equals(userClaim.Type))
+                {
+                    inClaim = true;
+                    <dd>
+                        @Html.DisplayFor(model => inClaim)
+                    </dd>
+                    break;
+                }
+            }
+            if (!inClaim)
+            {
+                <dd>
+                    @Html.DisplayFor(model => inClaim)
+                </dd>
+            }
+            inClaim = false;
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="EditUser" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="UserList">Back to List</a>
+</div>

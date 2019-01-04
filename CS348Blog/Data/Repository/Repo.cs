@@ -1,5 +1,6 @@
 ﻿using CS348Blog.Data;
 using CSC348Blog.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,16 @@ namespace CSC348Blog.Data.Repository
         public void RemovePost(Post post)
         {
             _db.Posts.Remove(post);
+        }
+
+        public async Task<List<IdentityUser>> GetUserList()
+        {
+            return await _db.Users.ToListAsync();
+        }
+
+        public async Task<List<IdentityRole>> GetRoleList()
+        {
+            return await _db.Roles.ToListAsync();
         }
     }
 }

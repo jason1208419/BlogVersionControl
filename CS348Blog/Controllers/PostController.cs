@@ -16,7 +16,7 @@ using System.Security.Claims;
     This controller due with Get request and post request about posts
     Only admin can do these get and post requests
  */
-namespace CSC348Blog.Controllers
+namespace CSC348Blog.Models
 {
     [Authorize]
     [AutoValidateAntiforgeryToken]
@@ -198,20 +198,20 @@ namespace CSC348Blog.Controllers
 
         [HttpPost]
         [Authorize("Create Comment")]
-        public async Task<IActionResult> Comment(CommentViewModel fuck)
+        public async Task<IActionResult> Comment(CommentViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Post", new { id = fuck.PostID });
+                return RedirectToAction("Post", new { id = model.PostID });
             }
 
-            var post = await _repo.GetPost(fuck.PostID);
+            var post = await _repo.GetPost(model.PostID);
             post.Comments = post.Comments ?? new List<Comment>();
-            if (fuck.MainCommentID == 0)
+            if (model.MainCommentID == 0)
             {
                 post.Comments.Add(new Comment
                 {
-                    Content = fuck.Content,
+                    Content = model.Content,
                     Creator = User.Identity.Name,
                     CreationTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
                 });
@@ -220,8 +220,8 @@ namespace CSC348Blog.Controllers
             {
                 post.Comments.Add(new Comment
                 {
-                    ParentCommentID = fuck.MainCommentID,
-                    Content = "@" + fuck.ReplyTo + "    " + fuck.Content,
+                    ParentCommentID = model.MainCommentID,
+                    Content = "@" + model.ReplyTo + "    " + model.Content,
                     Creator = User.Identity.Name,
                     CreationTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
                 });
@@ -229,7 +229,7 @@ namespace CSC348Blog.Controllers
             _repo.UpdatePost(post);
             await _repo.SaveChangesAsync();
 
-            return RedirectToAction("Post", new { id = fuck.PostID });
+            return RedirectToAction("Post", new { id = model.PostID });
         }
     }
 }

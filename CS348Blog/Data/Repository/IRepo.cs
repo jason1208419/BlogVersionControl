@@ -1,4 +1,5 @@
 ﻿using CSC348Blog.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace CSC348Blog.Data.Repository
         Task SaveChangesAsync();
         void UpdatePost(Post post);
         void RemovePost(Post post);
+        Task<List<IdentityUser>> GetUserList();
+        Task<List<IdentityRole>> GetRoleList();
     }
 }
