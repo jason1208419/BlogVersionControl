@@ -4,59 +4,164 @@
     ViewData["Title"] = "Post";
 }
 
-<h2>Post</h2>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/postlist/main.css" />
+    <link rel="stylesheet" href="~/css/postlist/responsive.css" />
+</head>
 
-<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="EditPost" asp-route-id="@Model.PostID">Edit</a> |
-    <a asp-action="DeletePost" asp-route-id="@Model.PostID">Delete</a> |
-    <a asp-action="postList">Back to List</a>
-</div>
-<div class="comment-section">
-    @{
-        await ShowPartialView(0);
-    }
-    @foreach (var comment in Model.Comments)
-    {
-        @if (comment.ParentCommentID == 0)
-        {
-            <p>
-                @comment.Content --- @comment.Creator --- @comment.CreationTime
-            </p>
-            await ShowPartialView(comment.CommentID, comment.Creator);
-            <div style="margin-left: 20px;">
-
-                @foreach (var sc in Model.Comments)
-                {
-                    if (sc.ParentCommentID == comment.CommentID)
-                    {
-                        <p>
-                            @sc.Content --- @sc.Creator --- @sc.CreationTime
-                        </p>
-                        await ShowPartialView(comment.CommentID, sc.Creator);
-                    }
-                }
+<body>
+    <section class="blog_area p_120 single-post-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-11">
+                    <div class="main_blog_details">
+                        <img class="img-fluid" src="~/images/default.png" alt="" style="max-width:100% ; height:auto">
+                        <a href="#"><h4>@Model.Title</h4></a>
+                        <div class="user_details">
+                            <div class="float-right">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h5>@Model.Creator</h5>
+                                        <p>@Model.CreationDate</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>@Model.Content</p>
+                        <div class="news_d_footer">
+                            
+                            <div class="news_socail ml-auto">
+                                <a asp-action="postList" class="primary-btn submit_btn">Back to List</a>
+                               
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navigation-area">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
+                                <a asp-action="EditPost" asp-route-id="@Model.PostID" class="primary-btn submit_btn">Edit</a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
+                                <a class="primary-btn submit_btn" asp-action="DeletePost" asp-route-id="@Model.PostID">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comments-area">
+                        <h4>Comments</h4>
+                        @foreach (var comment in Model.Comments)
+                        {
+                            if (comment.ParentCommentID == 0)
+                            {
+                                <div class="comment-list">
+                                    <div class="single-comment justify-content-between d-flex">
+                                        <div class="user justify-content-between d-flex">
+                                            <div class="desc">
+                                                <h5>@comment.Creator</h5>
+                                                <p class="date">@comment.CreationTime </p>
+                                                <p class="comment">
+                                                    @comment.Content
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="reply-btn">
+                                            <a onclick="Reply_Click(@comment.CommentID)" class="btn-reply text-uppercase">reply</a>
+                                        </div>
+                                        <div id="@comment.CommentID" style="display: none">
+                                            @{await ShowPartialView(comment.CommentID, comment.Creator);}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="comment-list left-padding">
+                                    @foreach (var sc in Model.Comments)
+                                    {
+                                        if (sc.ParentCommentID == comment.CommentID)
+                                        {
+                                            <div class="single-comment justify-content-between d-flex">
+                                                <div class="user justify-content-between d-flex">
+                                                    <div class="desc">
+                                                        <h5>@sc.Creator</h5>
+                                                        <p class="date">@sc.CreationTime </p>
+                                                        <p class="comment">
+                                                            @sc.Content
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="reply-btn">
+                                                    <a onclick="Reply_Click(@sc.CommentID)" class="btn-reply text-uppercase">reply</a>
+                                                </div>
+                                                <div id="@sc.CommentID" style="display: none">
+                                                    @{await ShowPartialView(comment.CommentID, sc.Creator); }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                    <h4>Leave a Reply</h4>
+                    @{await ShowPartialView(0); }
+                </div>
             </div>
+        </div>
+    </section>
+</body>
+@*<h2>Post</h2>
+
+    <div>
+        <h4>Post</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Content)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="EditPost" asp-route-id="@Model.PostID">Edit</a> |
+        <a asp-action="DeletePost" asp-route-id="@Model.PostID">Delete</a> |
+        <a asp-action="postList">Back to List</a>
+    </div>
+    <div class="comment-section">
+        @{
+            await ShowPartialView(0);
         }
-    }
-</div>
+        @foreach (var comment in Model.Comments)
+        {
+            @if (comment.ParentCommentID == 0)
+            {
+                <p>
+                    @comment.Content --- @comment.Creator --- @comment.CreationTime
+                </p>
+                await ShowPartialView(comment.CommentID, comment.Creator);
+                <div style="margin-left: 20px;">
+
+                    @foreach (var sc in Model.Comments)
+                    {
+                        if (sc.ParentCommentID == comment.CommentID)
+                        {
+                            <p>
+                                @sc.Content --- @sc.Creator --- @sc.CreationTime
+                            </p>
+                            await ShowPartialView(comment.CommentID, sc.Creator);
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>*@
 @functions{
     public async Task ShowPartialView(int id, string creator)
     {
@@ -69,3 +174,16 @@
     }
 }
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        function Reply_Click(value) {
+            var x = document.getElementById(value);
+            if (x.style.display == "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
+}

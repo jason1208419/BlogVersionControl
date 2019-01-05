@@ -6,17 +6,9 @@
 
 <head>
     <meta charset="utf-8" />
- 
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/postlist/main.css" />
     <link rel="stylesheet" href="~/css/postlist/responsive.css" />
-
-    <style>
-        
-    </style>
-
 </head>
 
 
@@ -37,8 +29,7 @@
                                         <a asp-action="Post" asp-route-id="@item.PostID"><h4>@item.Title</h4></a>
                                         <p>@item.Content</p>
                                         <div class="date">
-                                            <a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> @item.CreationDate</a>
-                                            @*<a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.CommentCount</a>*@
+                                            <a asp-action="Post" asp-route-id="@item.PostID"><i class="fa fa-calendar" aria-hidden="true"></i> @item.CreationDate</a>
                                         </div>
                                     </div>
                                 </div>

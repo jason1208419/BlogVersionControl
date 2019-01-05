@@ -4,6 +4,13 @@
     ViewData["Title"] = "DeletePost";
 }
 
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/postlist/main.css" />
+    <link rel="stylesheet" href="~/css/postlist/responsive.css" />
+</head>
+
 <h2>DeletePost</h2>
 
 <h3>Are you sure you want to delete this?</h3>
@@ -27,7 +34,7 @@
     
     <form asp-action="DeletePost">
         <input type="hidden" asp-for="PostID" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <input type="submit" value="Delete" class="primary-btn submit_btn" /> |
         <a asp-action="PostList">Back to List</a>
     </form>
 </div>

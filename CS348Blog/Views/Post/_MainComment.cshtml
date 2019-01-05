@@ -1,15 +1,29 @@
 ﻿@model CSC348Blog.Models.CommentViewModel
-
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/postlist/main.css" />
+    <link rel="stylesheet" href="~/css/postlist/responsive.css" />
+</head>
 
-<div>
-    <form method="post" asp-action="Comment">
+
+<div class="comment-form">
+    <form asp-action="Comment">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input asp-for="PostID" type="hidden" />
         <input asp-for="MainCommentID" type="hidden" />
-        <input asp-for="Content" />
+        <div class="form-group">
+            <textarea asp-for="Content" class="form-control mb-10" rows="5"
+                      placeholder="Message" onfocus="this.placeholder = ''"
+                      onblur="this.placeholder = 'Message'"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
         <input asp-for="ReplyTo" type="hidden" />
-        <button type="submit">Submit</button>
+        <div class="form-group">
+            <input type="submit" value="Post Comment" class="primary-btn submit_btn" />
+        </div>
     </form>
 </div>

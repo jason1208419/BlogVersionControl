@@ -4,26 +4,31 @@
     ViewData["Title"] = "CreatePost";
 }
 
-<h2>CreatePost</h2>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/postlist/main.css" />
+    <link rel="stylesheet" href="~/css/postlist/responsive.css" />
+</head>
 
-<h4>CreatePost</h4>
+<h2>CreatePost</h2>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="CreatePost">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="single-input" placeholder="Title"
+                       onfocus="this.placeholder=''" onblur="this.placeholder='Title'" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control"></textarea>
+                <textarea asp-for="Content" class="single-textarea" placeholder="Content"
+                          onfocus="this.placeholder=''" onblur="this.placeholder='Content'"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="primary-btn submit_btn" />
             </div>
         </form>
     </div>

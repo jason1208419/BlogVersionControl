@@ -200,6 +200,7 @@ namespace CSC348Blog.Models
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Post", new { id = model.PostID });
+                //return NotFound();
             }
 
             var post = await _repo.GetPost(model.PostID);
@@ -218,7 +219,7 @@ namespace CSC348Blog.Models
                 post.Comments.Add(new Comment
                 {
                     ParentCommentID = model.MainCommentID,
-                    Content = "@" + model.ReplyTo + "    " + model.Content,
+                    Content = "Reply To " + model.ReplyTo + " ------ " + model.Content,
                     Creator = User.Identity.Name,
                     CreationTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
                 });

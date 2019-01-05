@@ -4,9 +4,14 @@
     ViewData["Title"] = "EditPost";
 }
 
-<h2>EditPost</h2>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/postlist/main.css" />
+    <link rel="stylesheet" href="~/css/postlist/responsive.css" />
+</head>
 
-<h4>Post</h4>
+<h2>Edit Post</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,16 +22,18 @@
             <input type="hidden" asp-for="CreationDate" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="single-input" placeholder="Title"
+                       onfocus="this.placeholder=''" onblur="this.placeholder='Title'" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control"></textarea>
+                <textarea asp-for="Content" class="single-textarea" placeholder="Content"
+                          onfocus="this.placeholder=''" onblur="this.placeholder='Content'"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="primary-btn submit_btn" />
             </div>
         </form>
     </div>

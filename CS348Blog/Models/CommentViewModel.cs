@@ -14,8 +14,8 @@ namespace CSC348Blog.Models
         [Required]
         public int MainCommentID { get; set; }
 
-        [Required]
-        public String Content { get; set; }
+        [Required, MinLength(2)]
+        public string Content { get; set; }
 
         public String ReplyTo { get; set; }
     }
