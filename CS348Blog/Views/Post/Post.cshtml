@@ -26,6 +26,7 @@
 </div>
 <div>
     <a asp-action="EditPost" asp-route-id="@Model.PostID">Edit</a> |
+    <a asp-action="DeletePost" asp-route-id="@Model.PostID">Delete</a> |
     <a asp-action="postList">Back to List</a>
 </div>
 <div class="comment-section">
@@ -39,21 +40,19 @@
             <p>
                 @comment.Content --- @comment.Creator --- @comment.CreationTime
             </p>
+            await ShowPartialView(comment.CommentID, comment.Creator);
             <div style="margin-left: 20px;">
-                <h4>Sub Comments</h4>
-                @{
-                    await ShowPartialView(comment.CommentID, comment.Creator);
-                }
-                    @foreach (var sc in Model.Comments)
+
+                @foreach (var sc in Model.Comments)
+                {
+                    if (sc.ParentCommentID == comment.CommentID)
                     {
-                        if (sc.ParentCommentID == comment.CommentID)
-                        {
-                            <p>
-                                @sc.Content --- @sc.Creator --- @sc.CreationTime
-                            </p>
-                            await ShowPartialView(comment.CommentID, sc.Creator);
-                        }
+                        <p>
+                            @sc.Content --- @sc.Creator --- @sc.CreationTime
+                        </p>
+                        await ShowPartialView(comment.CommentID, sc.Creator);
                     }
+                }
             </div>
         }
     }

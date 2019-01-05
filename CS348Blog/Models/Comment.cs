@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,5 +17,7 @@ namespace CSC348Blog.Models
         public DateTime EditDate { get; set; }
         public String Content { get; set; }
         public int ParentCommentID { get; set; }
+        [ForeignKey("Comment")]
+        public int PostID { get; set; }
     }
 }

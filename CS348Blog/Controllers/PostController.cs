@@ -32,7 +32,7 @@ namespace CSC348Blog.Models
         }
 
         //Get the requested post from database and display the details of the post
-        [Authorize("View Post")]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(int? id)
         {
             return await GetPost(id);
@@ -46,22 +46,21 @@ namespace CSC348Blog.Models
         }
 
         //Get all posts from database and turn it to a list. Then display all posts in a page
-        [Authorize("View Post List")]
+        [AllowAnonymous]
         public async Task<IActionResult> PostList()
         {
             List<Post> postsList = await _repo.GetPostList();
+
             return View(postsList);
         }
 
         //Get the post from database which the user want to edit and display details on input area
-        //[Authorize("Edit Post")]
         public async Task<IActionResult> EditPost(int? id)
         {
             return await Authorize(id, "edit");
         }
 
         //Get the post from database which the user want to delete and display details on the page
-        //[Authorize("Delete Post")]
         public async Task<IActionResult> DeletePost(int? id)
         {
             return await Authorize(id, "delete");
@@ -95,7 +94,6 @@ namespace CSC348Blog.Models
             Redirect to the page showing details of the created post after editing
          */
         [HttpPost]
-        //[Authorize("Edit Post")]
         public async Task<IActionResult> EditPost(int id, Post post)
         {
             //Check if the user edit the post he meant to be editing
@@ -124,7 +122,6 @@ namespace CSC348Blog.Models
             Redirect to the page showing list of posts after deletion
          */
         [HttpPost]
-        //[Authorize("Delete Post")]
         public async Task<IActionResult> DeletePost(int id)
         {
             Post post = await _repo.GetPost(id);
