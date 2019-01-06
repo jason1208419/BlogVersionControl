@@ -16,7 +16,7 @@ namespace CSC348Blog.Models
         [ReadOnly(true)]
         public string Id { get; set; }
 
-        [Required]
+        [Required, ReadOnly(true)]
         public string UserName { get; set; }
 
         [Required]

@@ -20,6 +20,6 @@ namespace CSC348Blog.Models
         [Required, MinLength(2), MaxLength(1000)]
         public string Content { get; set; }
 
-        public String ReplyTo { get; set; }
+        public string ReplyTo { get; set; }
     }
 }

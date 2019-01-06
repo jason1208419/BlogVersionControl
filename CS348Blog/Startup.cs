@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CSC348Blog.Data.Repository;
 using CSC348Blog.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace CS348Blog
 {
@@ -29,6 +30,11 @@ namespace CS348Blog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options =>
+                    {
+                        options.LoginPath = "/Account/Login";
+                    });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -43,12 +49,6 @@ namespace CS348Blog
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //            services.AddIdentity<IdentityUser, IdentityRole>()
-            //.AddDefaultUI()
-            //.AddDefaultTokenProviders()
-            //.AddEntityFrameworkStores<ApplicationDbContext>();
-
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());

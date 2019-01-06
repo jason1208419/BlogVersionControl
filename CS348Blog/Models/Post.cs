@@ -15,20 +15,20 @@ namespace CSC348Blog.Models
         public int PostID { get; set; }
 
         [Required]
-        public String Creator { get; set; }
+        public string Creator { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
 
-        public String Editor { get; set; }
+        public string Editor { get; set; }
 
         public DateTime EditDate { get; set; }
 
         [Required]
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         [Required]
-        public String Content { get; set; }
+        public string Content { get; set; }
 
         public List<Comment> Comments { get; set; }
     }

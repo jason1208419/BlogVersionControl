@@ -12,9 +12,9 @@ namespace CSC348Blog.Models
     public class PostViewModel
     {
         [Required, MinLength(2), MaxLength(50)]
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         [Required, MinLength(10), MaxLength(10000)]
-        public String Content { get; set; }
+        public string Content { get; set; }
     }
 }
