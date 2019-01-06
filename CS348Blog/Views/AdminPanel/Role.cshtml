@@ -29,12 +29,12 @@
     <h5>Claims</h5>
     <dl class="dl-horizontal">
         @{ bool inClaim = false;}
-        @foreach(var claim in Model.AllClaims)
+        @foreach (var claim in Model.AllClaims)
         {
             <dt>
                 @claim.Type
             </dt>
-            foreach(var roleClaim in Model.RoleClaims)
+            foreach (var roleClaim in Model.RoleClaims)
             {
                 if (Model.Name.Equals(roleClaim.ElementAt(0)) && claim.Type.Equals(roleClaim.ElementAt(1)))
                 {
@@ -55,7 +55,17 @@
         }
     </dl>
 </div>
-<div>
-    <a asp-action="EditRole" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="RoleList">Back to List</a>
-</div>
+
+@if (Model.Name.Equals("Admin"))
+{
+    <div>
+        <a asp-action="RoleList">Back to List</a>
+    </div>
+}
+else
+{
+    <div>
+        <a asp-action="EditRole" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="RoleList">Back to List</a>
+    </div>
+}
