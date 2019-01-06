@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
@@ -11,6 +12,7 @@ namespace CSC348Blog.Models
     //To get and save data from/to storage for AdminPanel controller.
     public class RoleViewModel
     {
+        [ReadOnly(true)]
         public string Id { get; set; }
 
         [Required, MinLength(2), MaxLength(20)]
@@ -41,8 +43,11 @@ namespace CSC348Blog.Models
         [Required]
         public bool CanPermissionPanel { get; set; }
 
+        [ReadOnly(true)]
         public List<IdentityRole> AllRoles { get; set; }
+        [ReadOnly(true)]
         public List<Claim> AllClaims { get; set; }
+        [ReadOnly(true)]
         public List<List<string>> RoleClaims { get; set; }
     }
 }

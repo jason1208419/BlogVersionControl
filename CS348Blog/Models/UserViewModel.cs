@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
@@ -12,6 +13,7 @@ namespace CSC348Blog.Models
     //To get and save data from/to storage for AdminPanel controller.
     public class UserViewModel
     {
+        [ReadOnly(true)]
         public string Id { get; set; }
 
         [Required]
@@ -34,8 +36,13 @@ namespace CSC348Blog.Models
         [Display(Name = "Phone Number Confirmed")]
         public bool PhoneNumberConfirmed { get; set; }
 
+        [ReadOnly(true)]
         public bool TwoFactorEnabled { get; set; }
+
+        [ReadOnly(true)]
         public bool LockoutEnabled { get; set; }
+
+        [ReadOnly(true)]
         public int AccessFailedCount { get; set; }
 
         public string Role { get; set; }
@@ -51,12 +58,18 @@ namespace CSC348Blog.Models
         public bool CanLike { get; set; }
         public bool CanDislike { get; set; }
         public bool CanPermissionPanel { get; set; }
+        [ReadOnly(true)]
         public List<SelectListItem> AllRolesText { get; set; }
 
+        [ReadOnly(true)]
         public List<IdentityRole> AllRoles { get; set; }
+        [ReadOnly(true)]
         public List<IdentityRole> UserRoles { get; set; }
+        [ReadOnly(true)]
         public List<Claim> AllClaims { get; set; }
+        [ReadOnly(true)]
         public List<Claim> UserClaims { get; set; }
+        [ReadOnly(true)]
         public List<List<string>> RoleClaims { get; set; }
     }
 }
