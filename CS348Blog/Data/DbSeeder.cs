@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace CSC348Blog.Data
 {
+    //To seed users and roles to database if not exsits
     public static class DbSeeder
     {
         private static readonly string _password = "Password123!";
 
+        //seed users and roles to database if not exsits
         public static void SeedDb(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             SeedRoles(roleManager);
@@ -18,6 +20,7 @@ namespace CSC348Blog.Data
             SeedUsers(userManager, roleManager);
         }
 
+        //seed users to database if not exsits
         public static void SeedUsers(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             AddUser(userManager, roleManager, "Member1@email.com", "Admin").Wait();
@@ -28,9 +31,11 @@ namespace CSC348Blog.Data
             AddUser(userManager, roleManager, "Customer5@email.com", "StandardUser").Wait();
         }
 
+        //seed a user to database if not exsits
         public static async Task AddUser(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, string email, string role)
         {
             var user = await userManager.FindByEmailAsync(email);
+            //To check if user exsits in daabase. If not, create
             if(user == null)
             {
                 IdentityUser identityUser = new IdentityUser()
@@ -44,14 +49,17 @@ namespace CSC348Blog.Data
             }
         }
 
+        //seed roles to database if not exsits
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             AddRole(roleManager, "Admin").Wait();
             AddRole(roleManager, "StandardUser").Wait();
         }
 
+        //seed a role to database if not exsits
         public static async Task AddRole(RoleManager<IdentityRole> roleManager, string role)
         {
+            //To check if a role exsits in the database. If not, create
             if (!await roleManager.RoleExistsAsync(role))
             {
                 IdentityRole identityRole = new IdentityRole(role);
@@ -59,28 +67,33 @@ namespace CSC348Blog.Data
             }
         }
 
+        //Add a claim to a user if not exsits
         public static async Task AddClaim(IdentityUser user, UserManager<IdentityUser> userManager, string claim, string value)
         {
             var storedClaims = await userManager.GetClaimsAsync(user);
-            var claimToCheck = storedClaims.FirstOrDefault(c => c.Type == claim);
+            var claimToAdd = storedClaims.FirstOrDefault(c => c.Type.Equals(claim));
 
-            if(claimToCheck == null)
+            //check if the user already get the claim to add. If not, add the claim to the user
+            if(claimToAdd == null)
             {
                 await userManager.AddClaimAsync(user, new Claim(claim, value));
             }
         }
 
+        //Add a claim to a role if not exsits
         public static async Task AddClaim(IdentityRole role, RoleManager<IdentityRole> roleManager, string claim, string value)
         {
             var storedClaims = await roleManager.GetClaimsAsync(role);
-            var claimToCheck = storedClaims.FirstOrDefault(c => c.Type == claim);
+            var claimToAdd = storedClaims.FirstOrDefault(c => c.Type.Equals(claim));
 
-            if (claimToCheck == null)
+            //check if the role already get the claim to add. If not, add the claim to the role
+            if (claimToAdd == null)
             {
                 await roleManager.AddClaimAsync(role, new Claim(claim, value));
             }
         }
 
+        //Seed roles and claims of that role to the database
         public static void SeedRoleClaims(RoleManager<IdentityRole> roleManager)
         {
             AddRoleClaim(roleManager, "Admin", "Create Post", "allowed").Wait();
@@ -104,9 +117,12 @@ namespace CSC348Blog.Data
             AddRoleClaim(roleManager, "StandardUser", "Dislike", "allowed").Wait();
         }
 
+        //Add a claim to a role if not exsits
         public static async Task AddRoleClaim(RoleManager<IdentityRole> roleManager, string role, string claim, string value)
         {
             var roleToCheck = await roleManager.FindByNameAsync(role);
+
+            //if the role does not exsits in database, add the role
             if(roleToCheck == null)
             {
                 await AddRole(roleManager, role);
@@ -115,19 +131,24 @@ namespace CSC348Blog.Data
             await AddClaim(roleToCheck, roleManager, claim, value);
         }
 
+        //Add a user to a role if the user does not get that role
         public static async Task AddUserToRole(IdentityUser identityUser, UserManager<IdentityUser> userManager, string role)
         {
+            //if the user does not have that role, add the role to the user
             if (!await userManager.IsInRoleAsync(identityUser, role))
             {
                 await userManager.AddToRoleAsync(identityUser, role);
             }
         }
 
+        //Add claims of a role to a user if the user does not get that claim
         public static async Task SeedClaims(IdentityUser identityUser, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, string roleName)
         {
             var role = await roleManager.FindByNameAsync(roleName);
-            var storedClaims = await roleManager.GetClaimsAsync(role);
-            foreach(var elem in storedClaims)
+            var roleClaims = await roleManager.GetClaimsAsync(role);
+
+            //if the user does not get a claim in that role, add that claim to the user
+            foreach(var elem in roleClaims)
             {
                 await AddClaim(identityUser, userManager, elem.Type, elem.Value);
             }

@@ -1,4 +1,4 @@
-﻿@model CSC348Blog.Models.Post
+﻿@model CSC348Blog.Models.PostViewModel
 
 @{
     ViewData["Title"] = "EditPost";
@@ -17,9 +17,6 @@
     <div class="col-md-4">
         <form asp-action="EditPost">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PostID" />
-            <input type="hidden" asp-for="Creator" />
-            <input type="hidden" asp-for="CreationDate" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="single-input" placeholder="Title"

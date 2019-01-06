@@ -4,6 +4,41 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+.flex-row {
+    -ms-flex-direction: row !important;
+    flex-direction: row !important;
+}
+.justify-content-end {
+    -ms-flex-pack: end !important;
+    justify-content: flex-end !important;
+}
+.align-items-center {
+    -ms-flex-align: center !important;
+    align-items: center !important;
+}
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+.justify-content-between {
+    -ms-flex-pack: justify !important;
+    justify-content: space-between !important;
+}
+
+.d-flex {
+    display: -ms-flexbox !important;
+    display: flex !important;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 html {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;

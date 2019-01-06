@@ -14,7 +14,7 @@
     <form asp-action="Comment">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input asp-for="PostID" type="hidden" />
-        <input asp-for="MainCommentID" type="hidden" />
+        <input asp-for="ParentCommentID" type="hidden" />
         <div class="form-group">
             <textarea asp-for="Content" class="form-control mb-10" rows="5"
                       placeholder="Message" onfocus="this.placeholder = ''"
@@ -27,3 +27,6 @@
         </div>
     </form>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

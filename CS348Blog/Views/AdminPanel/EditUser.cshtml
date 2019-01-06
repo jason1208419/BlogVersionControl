@@ -5,33 +5,40 @@
     ViewData["Title"] = "EditUser";
 }
 
-<h2>EditUser</h2>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/postlist/main.css" />
+    <link rel="stylesheet" href="~/css/postlist/responsive.css" />
+</head>
 
-<h4>User</h4>
+<h2>Edit User</h2>
 <hr />
 <body onload="Reset();">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <form asp-action="EditUser">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="UserName" />
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" class="single-input" placeholder="Email"
+                       onfocus="this.placeholder=''" onblur="this.placeholder='Email'" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <label asp-for="EmailConfirmed" class="control-label"></label>
                 <input type="checkbox" asp-for="@Model.EmailConfirmed" />
                 <div class="form-group">
                     <label asp-for="PhoneNumber" class="control-label"></label>
-                    <input asp-for="PhoneNumber" class="form-control" />
+                    <input asp-for="PhoneNumber" class="single-input" placeholder="Phone Number"
+                       onfocus="this.placeholder=''" onblur="this.placeholder='Phone Number'" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
                 <label asp-for="PhoneNumberConfirmed" class="control-label"></label>
                 <input type="checkbox" asp-for="@Model.PhoneNumberConfirmed" />
                 <div class="form-group">
-                    <input type="submit" value="Save" name="save" class="btn btn-default" />
+                    <input type="submit" value="Save" name="save" class="primary-btn submit_btn" />
                 </div>
                 <div>
                     <h5>Roles</h5>
@@ -68,10 +75,12 @@
                     <h4>User Permission</h4>
                     <hr />
                     <div class="row">
-                        <div class="col-md-4">
-                            @*<select asp-for="Role" asp-items="Model.AllRolesText"></select>*@
-                            @Html.DropDownListFor(m => m.Role, Model.AllRolesText, new { @id = "Role" })
+                        <div class="single-element-widget"><div class="default-select">
+                                @Html.DropDownListFor(m => m.Role, Model.AllRolesText, new { @id = "Role" })
+                            </div>
+                            
                         </div>
+                        
 
 
                         <div id="Custom">
@@ -166,13 +175,13 @@
                                             </dl>
                                         </td>
                                     </tr>
-                                </tbody>                                
+                                </tbody>
                             </table>
                         </div>
                         <div id="Roles">
                             <div class="form-group">
-                                <input type="submit" value="Add Role to User" name="add" class="btn btn-default" />
-                                <input type="submit" value="Remove Role from User" name="remove" class="btn btn-default" />
+                                <input type="submit" value="Add Role to User" name="add" class="primary-btn submit_btn" />
+                                <input type="submit" value="Remove Role from User" name="remove" class="primary-btn submit_btn" />
                             </div>
                             <table class="table" style="width:100%">
                                 <thead>
@@ -218,7 +227,7 @@
                                         </tr>
                                     }
                                 </tbody>
-                                
+
                             </table>
 
                         </div>
@@ -226,8 +235,8 @@
 
                     </div>
 
-                }
-            </form>
+                    }
+</form>
         </div>
     </div>
 </body>

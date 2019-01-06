@@ -7,17 +7,28 @@ using System.Threading.Tasks;
 
 namespace CSC348Blog.Models
 {
+    //To get and save data from/to storage for post controller
+    //For building a table in database and for user to view
     public class Comment
     {
-        [Key]
+        [Required,Key]
         public int CommentID { get; set; }
-        public String Creator { get; set; }
+
+        [Required]
+        public string Creator { get; set; }
+
+        [Required]
         public DateTime CreationTime { get; set; }
-        public String Editor { get; set; }
+
+        public string Editor { get; set; }
         public DateTime EditDate { get; set; }
-        public String Content { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+
         public int ParentCommentID { get; set; }
-        [ForeignKey("Comment")]
+
+        [Required,ForeignKey("Comment")]
         public int PostID { get; set; }
     }
 }

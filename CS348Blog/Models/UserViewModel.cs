@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CSC348Blog.Models
 {
+    //To get and save data from/to storage for AdminPanel controller.
     public class UserViewModel
     {
         public string Id { get; set; }

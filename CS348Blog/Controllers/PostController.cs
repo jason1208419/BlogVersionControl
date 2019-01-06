@@ -13,8 +13,9 @@ using CSC348Blog.Data.Repository;
 using System.Security.Claims;
 
 /*
-    This controller due with Get request and post request about posts
-    Only admin can do these get and post requests
+    This controller deal with Get request and post request about posts
+    Only admin can do get and post requests of post
+    All user can do get and post requests of comment
  */
 namespace CSC348Blog.Models
 {
@@ -28,14 +29,26 @@ namespace CSC348Blog.Models
         public PostController(IRepo repo)
         {
             _repo = repo;
-            //var comment = new Comment();
         }
 
         //Get the requested post from database and display the details of the post
         [AllowAnonymous]
         public async Task<IActionResult> Post(int? id)
         {
-            return await GetPost(id);
+            //Check if post ID is given for finding the post
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var post = await _repo.GetPost(id);
+
+            //Check if the post is found in the database base on the given post ID
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
         }
 
         //Display the page of creating post
@@ -67,35 +80,41 @@ namespace CSC348Blog.Models
         }
 
         /*
-            Use the post created by user and add to database if all requried data is given
+            Add the post created by user to database if all requried data is given
             Redirect to the page showing details of the created post after creation
          */
         [HttpPost]
         [Authorize("Create Post")]
-        public async Task<IActionResult> CreatePost(Post post)
+        public async Task<IActionResult> CreatePost(PostViewModel model)
         {
-            post.Creator = User.Identity.Name;
-            post.CreationDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
+            Post newPost = new Post
+            {
+                Creator = User.Identity.Name,
+                CreationDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now),
+                Title = model.Title,
+                Content = model.Content
+            };
 
             //Check if all required data is given
             if (ModelState.IsValid)
             {
-                await _repo.AddPost(post);
+                await _repo.AddPost(newPost);
                 await _repo.SaveChangesAsync();
 
-                return RedirectToAction("Post", "Post", new { id = post.PostID });
+                return RedirectToAction("Post", "Post", new { id = newPost.PostID });
             }
 
-            return View(post);
+            return View(model);
         }
 
         /*
-            Use the post created by user and update that post in database if all requried data is given
-            Redirect to the page showing details of the created post after editing
+            Update the post created by user in database if all requried data is given
+            Redirect to the page showing details of the updated post after editing
          */
         [HttpPost]
-        public async Task<IActionResult> EditPost(int id, Post post)
+        public async Task<IActionResult> EditPost(int id, PostViewModel model)
         {
+            var post = await _repo.GetPost(id);
             //Check if the user edit the post he meant to be editing
             if (id != post.PostID)
             {
@@ -104,17 +123,18 @@ namespace CSC348Blog.Models
 
             post.Editor = User.Identity.Name;
             post.EditDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
+            post.Title = model.Title;
+            post.Content = model.Content;
 
             //Check if all required data is given
             if (ModelState.IsValid)
             {
-
                 _repo.UpdatePost(post);
                 await _repo.SaveChangesAsync();
 
                 return RedirectToAction("Post", "Post", new { id = post.PostID });
             }
-            return View(post);
+            return View(model);
         }
 
         /*
@@ -132,8 +152,33 @@ namespace CSC348Blog.Models
             return RedirectToAction("PostList");
         }
 
-        //Get the post requested from the database and pass the post to View
-        private async Task<IActionResult> GetPost(int? id)
+        //Check if the user is the owner of the post or get right to edit or delete all posts
+        private bool IsPostOwner(int? id, string action, Post post)
+        {
+            //if user want to edit
+            if (action.Equals("edit", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //if the user is the owner of the post or get right to edit, return true
+                if (post.Creator.Equals(User.Identity.Name) || User.HasClaim("Edit Post", "allowed"))
+                {
+                    return true;
+                }
+            }
+            //if user want to delete
+            else if (action.Equals("delete", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //if the user is the owner of the post or get right to delete, return true
+                if (post.Creator.Equals(User.Identity.Name) || User.HasClaim("Delete Post", "allowed"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        //Return a view of PostViewModel if user is owner of post or get claim of the action
+        private async Task<IActionResult> Authorize(int? id, string action)
         {
             //Check if post ID is given for finding the post
             if (id == null)
@@ -141,7 +186,7 @@ namespace CSC348Blog.Models
                 return NotFound();
             }
 
-            Post post = await _repo.GetPost(id);
+            var post = await _repo.GetPost(id);
 
             //Check if the post is found in the database base on the given post ID
             if (post == null)
@@ -149,63 +194,37 @@ namespace CSC348Blog.Models
                 return NotFound();
             }
 
-            return View(post);
-        }
-
-        private async Task<bool> IsPostOwner(int? id, string action)
-        {
-            if (id == null)
-            {
-                return false;
-            }
-
-            var post = await _repo.GetPost(id);
-
-            if (post == null)
-            {
-                return false;
-            }
-
-            if (action.Equals("edit", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (post.Creator.Equals(User.Identity.Name) || User.HasClaim("Edit Post", "allowed"))
-                {
-                    return true;
-                }
-            } else if (action.Equals("delete", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (post.Creator.Equals(User.Identity.Name) || User.HasClaim("Delete Post", "allowed"))
-                {
-                    return true;
-                }
-            }
-
-            
-            return false;
-        }
-
-        private async Task<IActionResult> Authorize(int? id, string action)
-        {
-            if (!await IsPostOwner(id, action))
+            //if the user does not have right, retun view of Access Denied
+            if (!IsPostOwner(id, action, post))
             {
                 return Redirect("/Identity/Account/AccessDenied");
             }
-            return await GetPost(id);
+
+            PostViewModel model = new PostViewModel
+            {
+                Title = post.Title,
+                Content = post.Content
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [Authorize("Create Comment")]
+        //To create a comment
         public async Task<IActionResult> Comment(CommentViewModel model)
         {
+            //To check if all required data filled
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Post", new { id = model.PostID });
-                //return NotFound();
             }
 
             var post = await _repo.GetPost(model.PostID);
             post.Comments = post.Comments ?? new List<Comment>();
-            if (model.MainCommentID == 0)
+
+            //if the parent of the comment is the post
+            if (model.ParentCommentID == 0)
             {
                 post.Comments.Add(new Comment
                 {
@@ -214,11 +233,12 @@ namespace CSC348Blog.Models
                     CreationTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
                 });
             }
+            //if the parent of the comment is a comment
             else
             {
                 post.Comments.Add(new Comment
                 {
-                    ParentCommentID = model.MainCommentID,
+                    ParentCommentID = model.ParentCommentID,
                     Content = "Reply To " + model.ReplyTo + " ------ " + model.Content,
                     Creator = User.Identity.Name,
                     CreationTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)

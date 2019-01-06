@@ -1,4 +1,4 @@
-﻿@model CSC348Blog.Models.Post
+﻿@model CSC348Blog.Models.PostViewModel
 
 @{
     ViewData["Title"] = "DeletePost";
@@ -33,7 +33,6 @@
     </dl>
     
     <form asp-action="DeletePost">
-        <input type="hidden" asp-for="PostID" />
         <input type="submit" value="Delete" class="primary-btn submit_btn" /> |
         <a asp-action="PostList">Back to List</a>
     </form>

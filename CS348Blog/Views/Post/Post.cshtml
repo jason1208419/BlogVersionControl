@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col-lg-11">
                     <div class="main_blog_details">
-                        <img class="img-fluid" src="~/images/default.png" alt="" style="max-width:100% ; height:auto">
+                        <img class="img-fluid" src="~/images/default.png" alt="" >
                         <a href="#"><h4>@Model.Title</h4></a>
                         <div class="user_details">
                             <div class="float-right">
@@ -30,12 +30,14 @@
                             </div>
                         </div>
                         <p>@Model.Content</p>
+                        @if(Model.Editor != null)
+                        {
+                            <p>Last Edited By @Model.Editor on @Model.EditDate</p>
+                        }
                         <div class="news_d_footer">
                             
                             <div class="news_socail ml-auto">
                                 <a asp-action="postList" class="primary-btn submit_btn">Back to List</a>
-                               
-                                
                             </div>
                         </div>
                     </div>
@@ -69,9 +71,9 @@
                                         <div class="reply-btn">
                                             <a onclick="Reply_Click(@comment.CommentID)" class="btn-reply text-uppercase">reply</a>
                                         </div>
-                                        <div id="@comment.CommentID" style="display: none">
-                                            @{await ShowPartialView(comment.CommentID, comment.Creator);}
-                                        </div>
+                                    </div>
+                                    <div id="@comment.CommentID" style="display: none">
+                                        @{await ShowPartialView(comment.CommentID, comment.Creator);}
                                     </div>
                                 </div>
                                 <div class="comment-list left-padding">
@@ -91,10 +93,10 @@
                                                 </div>
                                                 <div class="reply-btn">
                                                     <a onclick="Reply_Click(@sc.CommentID)" class="btn-reply text-uppercase">reply</a>
-                                                </div>
-                                                <div id="@sc.CommentID" style="display: none">
-                                                    @{await ShowPartialView(comment.CommentID, sc.Creator); }
-                                                </div>
+                                                </div>                                                
+                                            </div>
+                                            <div id="@sc.CommentID" style="display: none">
+                                                @{await ShowPartialView(comment.CommentID, sc.Creator); }
                                             </div>
                                         }
                                     }
@@ -109,68 +111,15 @@
         </div>
     </section>
 </body>
-@*<h2>Post</h2>
-
-    <div>
-        <h4>Post</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Content)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Content)
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <a asp-action="EditPost" asp-route-id="@Model.PostID">Edit</a> |
-        <a asp-action="DeletePost" asp-route-id="@Model.PostID">Delete</a> |
-        <a asp-action="postList">Back to List</a>
-    </div>
-    <div class="comment-section">
-        @{
-            await ShowPartialView(0);
-        }
-        @foreach (var comment in Model.Comments)
-        {
-            @if (comment.ParentCommentID == 0)
-            {
-                <p>
-                    @comment.Content --- @comment.Creator --- @comment.CreationTime
-                </p>
-                await ShowPartialView(comment.CommentID, comment.Creator);
-                <div style="margin-left: 20px;">
-
-                    @foreach (var sc in Model.Comments)
-                    {
-                        if (sc.ParentCommentID == comment.CommentID)
-                        {
-                            <p>
-                                @sc.Content --- @sc.Creator --- @sc.CreationTime
-                            </p>
-                            await ShowPartialView(comment.CommentID, sc.Creator);
-                        }
-                    }
-                </div>
-            }
-        }
-    </div>*@
 @functions{
     public async Task ShowPartialView(int id, string creator)
     {
-        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = id, ReplyTo = creator });
+        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, ParentCommentID = id, ReplyTo = creator });
     }
 
     public async Task ShowPartialView(int id)
     {
-        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, MainCommentID = id });
+        await Html.RenderPartialAsync("_MainComment", new CSC348Blog.Models.CommentViewModel { PostID = Model.PostID, ParentCommentID = id });
     }
 }
 

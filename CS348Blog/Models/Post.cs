@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace CSC348Blog.Models
 {
+    //To get and save data from/to storage for post controller
+    //For building a table in database and for user to view
     public class Post
     {
-        [Required, Key, ScaffoldColumn(false)]
+        [Key]
         public int PostID { get; set; }
 
-        [Required, ScaffoldColumn(false)]
-        public String Creator { get; set; } = "x";
+        [Required]
+        public String Creator { get; set; }
 
-        [Required, ScaffoldColumn(false)]
-        public DateTime CreationDate { get; set; } = DateTime.MinValue;
+        [Required]
+        public DateTime CreationDate { get; set; }
 
-        [ScaffoldColumn(false)]
         public String Editor { get; set; }
 
-        [ScaffoldColumn(false)]
         public DateTime EditDate { get; set; }
 
-        [Required, MinLength(2), MaxLength(50)]
+        [Required]
         public String Title { get; set; }
 
-        [Required, MinLength(10)]
+        [Required]
         public String Content { get; set; }
 
         public List<Comment> Comments { get; set; }

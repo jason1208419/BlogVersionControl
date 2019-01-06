@@ -9,17 +9,12 @@ namespace CSC348Blog.Models
     //To get and save data from/to storage for post controller.
     //Only necessary data is here for user to create or edit
     //to prevent over-posting
-    public class CommentViewModel
+    public class PostViewModel
     {
-        [Required]
-        public int PostID { get; set; }
+        [Required, MinLength(2), MaxLength(50)]
+        public String Title { get; set; }
 
-        [Required]
-        public int ParentCommentID { get; set; }
-
-        [Required, MinLength(2), MaxLength(1000)]
-        public string Content { get; set; }
-
-        public String ReplyTo { get; set; }
+        [Required, MinLength(10), MaxLength(10000)]
+        public String Content { get; set; }
     }
 }

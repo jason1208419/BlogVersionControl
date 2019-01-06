@@ -1406,7 +1406,7 @@ button:focus {
 }
 
 .comments-area .comment-list {
-    padding-bottom: 48px;
+    padding-bottom: 30px;
 }
 
     .comments-area .comment-list:last-child {
@@ -1469,9 +1469,9 @@ button:focus {
 .comment-form {
     background: #fff;
     text-align: left;
-    padding: 47px 30px 43px;
-    margin-top: 50px;
-    margin-bottom: 40px;
+    padding: 0px 0px 43px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
     .comment-form h4 {

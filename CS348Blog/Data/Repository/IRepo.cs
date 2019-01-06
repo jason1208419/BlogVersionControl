@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSC348Blog.Data.Repository
 {
+    //An interface to let controller get data from and save data to database
     public interface IRepo
     {
         Task<Post> GetPost(int? id);
