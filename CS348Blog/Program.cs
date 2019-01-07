@@ -19,7 +19,6 @@ namespace CS348Blog
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .UseSetting("https_port", "8080")
                 .UseStartup<Startup>();
     }
 }

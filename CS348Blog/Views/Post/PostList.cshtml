@@ -27,7 +27,7 @@
                                 <div class="blog_text">
                                     <div class="blog_text_inner">
                                         <a asp-action="Post" asp-route-id="@item.PostID"><h4>@item.Title</h4></a>
-                                        <p>@item.Content</p>
+                                        <p style="word-wrap: break-word; white-space: pre-wrap">@item.Content</p>
                                         <div class="date">
                                             <a asp-action="Post" asp-route-id="@item.PostID"><i class="fa fa-calendar" aria-hidden="true"></i> @item.CreationDate</a>
                                         </div>

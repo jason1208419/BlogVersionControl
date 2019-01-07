@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p>@Model.Content</p>
+                        <p style="word-wrap: break-word; white-space: pre-wrap">@Model.Content</p>
                         @if(Model.Editor != null)
                         {
                             <p>Last Edited By @Model.Editor on @Model.EditDate</p>
@@ -63,7 +63,7 @@
                                             <div class="desc">
                                                 <h5>@comment.Creator</h5>
                                                 <p class="date">@comment.CreationTime </p>
-                                                <p class="comment">
+                                                <p>
                                                     @comment.Content
                                                 </p>
                                             </div>
