@@ -17,7 +17,7 @@ Your task is to plan and create a simple web application, using ASP.NET Core MVC
 For example, you could create a simple blog where the admin can post articles which users can comment on, or a simple version of blackboard where admin (or lecturers) can post lecture slides and students can comment on them.<br/>
 You will be required to hand in two pieces of coursework throughout the semester. This will require good time management to balance it with other modules, if this is something you struggle with watch the video I made about how I manage my own time.
 
---- | --- | Weighting | Deadline
+||| Weighting | Deadline
 --- | --- | --- | ---
 **Coursework 1** | Code Review | 40% | 12th November 2018 for your own code<br/>19th November 2018 to review someone else’s code
 **Coursework 2** | Implementation | 60% | 8th January 2019
@@ -65,3 +65,84 @@ Asking for support will in no way effect your final mark.
 * Use the rubrics to mark your own (and each other’s) draft work
 * If you are unsure if you have done enough look at the rubric.
 * Try not to think about this just as coursework where you are trying to get a good mark. Try to enjoy creating something.
+
+### CW1 Rubric
+|| Clear Fail (<35%) Fail (35-39%) | Pass (40-49%) | 2:2 (50-59%) | 2:1 (60-69%) | First (70%-79%) | Distinction (80%+)
+--- | --- | --- | --- | --- | --- | ---
+Your Implementation (50%) | No code has been submitted | Source code has been submitted in the way described in the assignment. | The student has independently implemented a significant portion of the source file. | The student has followed good practices both in terms of the MVC pattern and the coding conventions for the languages used. | Each method is easy to follow and has a single responsibility | Implementation of a professional standard
+Code Review (50%) | No code review has been submitted, or the language and tone is aggressive and/or personal. | Areas of improvement in the source code are identified. | Positive aspects of the source code are identified. | Solutions to bugs or ways of improving the code are explained fully. | The mark awarded is within one grade boundry of the lecturers. | A professional code review and the mark given matches the grade boundry of the lecturers.
+
+### CW2 Rubric
+<table>
+  <tr>
+    <th></th>
+    <th>Clear Fail (<35%)</th>
+    <th>Fail (35-39%)</th> 
+    <th>Pass (40-49%)</th>
+    <th>2:2 (50-59%)</th>
+    <th>2:1 (60-69%)</th>
+    <th>First (70%-79%)</th>
+    <th>Distinction (80%+)</th>
+  </tr>
+  <tr>
+    <td>Progress (20%)</td>
+    <td colspan="2">Minimal progress, student has no working code</td> 
+    <td>Student has working code to present but it has not progressed much beyond an introductory MVC tutorial (basic CRUD)<br/>[10]</td>
+   <td>Student has implemented a web application but there are a number of bugs which would make the application unsuitable for release<br/>[2]</td>
+   <td>There are some minor bugs but the application is in a usable state.<br/>[2]</td>
+   <td>There is no evidence of bugs<br/>[3]</td>
+   <td>A marketable web application has been produced<br/>[3]</td>
+  </tr>
+  <tr>
+    <td>Implementation (20%)</td>
+    <td colspan="2">Minimal progress, student has no working code</td> 
+    <td>There is working code but the vast majority has been generated using MVC scaffolding, the student has only independently implemented a model definition.<br/>[10]</td>
+   <td>Evidence that the student has independently implemented a significant portion of the application.<br/>[2]</td>
+   <td>The student has followed good practices (as described in lectures) both in terms of the MVC pattern and the coding conventions for the languages used.<br/>[2]</td>
+   <td>The student has used version control<br/>[3]</td>
+   <td>Implementation of a professional standard<br/>[3]</td>
+  </tr>
+ <tr>
+    <td>Security (20%)</td>
+    <td colspan="2">The web application contains one or more examples of a serious security flaw</td> 
+    <td>There is no obvious cross site request forgery vulnerability<br/>[10]</td>
+   <td>There is no obvious cross site scripting vulnerability or over posting risk<br/>[2]</td>
+   <td>Steps have been taken to prevent cookie theft<br/>[2]</td>
+   <td>Steps have been taken to mitigate the risks posed by error reporting<br/>[3]</td>
+   <td>An example of a security risk not mentioned in this mark scheme is mitigated.<br/>[3]</td>
+  </tr>
+ <tr>
+    <td>Working with Models (10%)</td>
+    <td colspan="2">No database is used</td> 
+    <td>A database is created from a model definition using the code first convention.<br/>[5]</td>
+   <td>Data annotations are used effectively.<br/>[1]</td>
+   <td>At least one view specific model is used correctly<br/>[1]</td>
+   <td>The database is seeded using C# code when the application starts.<br/>[1]</td>
+   <td>A repository pattern is used to abstract away the data access layer and dependency injection is used to access the database.<br/>[2]</td>
+  </tr>
+ <tr>
+    <td>Identity (10%)</td>
+    <td colspan="2">User accounts are not used in any way in application</td> 
+    <td>Users can log in to the web application but it serves no purpose.<br/>[5]</td>
+   <td>Different users have different levels of authorisation<br/>[1]</td>
+   <td>A claim based authorisation system is implemented using role names.<br/>[1]</td>
+   <td>claim based authorisation system is implemented using the claims system in ASP.NET Identity.<br/>[1]</td>
+   <td>An interface for site owners to create and edit users and user roles is implemented<br/>[2]</td>
+  </tr>
+ <tr>
+    <td>Functionality (10%)</td>
+    <td colspan="2">The application is a non-interactive web site</td> 
+    <td>The application only has the functionality stated in the basic requirements<br/>[5]</td>
+   <td>The web application has at least one additional working feature<br/>[1]</td>
+   <td>The web application uses JavaScript to improve the user experience<br/>[1]</td>
+   <td colspan="2">Evidence of independent research (A feature is implemented which requires knowledge from outside the taught content)<br/>[3]</td>
+  </tr>
+ <tr>
+    <td>Presentation (10%)</td>
+    <td colspan="3">The web application is unchanged from the original template<br/>[5]</td>
+   <td>The web application visual style has changed from the original template<br/>[1]</td>
+   <td>All styling is done using CSS<br/>[1]</td>
+   <td>The web application layout changes appropriately as the browser window is resized<br/>[1]</td>
+   <td>The web application is unrecognisable as a ASP.NET project<br/>[2]</td>
+  </tr>
+</table>
